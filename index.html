@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC-Pedia | Ensiklopedia Perangkat Keras Komputer Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300 selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 dark:from-white dark:via-indigo-200 dark:to-indigo-400 bg-clip-text text-transparent">PC-PEDIA</span>
+                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-semibold bg-indigo-500/10 dark:bg-indigo-500/25 text-indigo-600 dark:text-indigo-300 rounded-full border border-indigo-500/30">INSIGHT 3.0</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links & Actions -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <div class="hidden lg:flex items-center space-x-1 text-sm font-medium">
+                    <button onclick="router.navigate('home')" class="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Ensiklopedia</button>
+                    <button onclick="router.navigate('packages')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Rekomendasi Rakit</button>
+                    <button onclick="router.navigate('builder')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Simulasi Rakit</button>
+                    <button onclick="router.navigate('quiz')" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">Kuis Hardware</button>
+                </div>
+
+                <div class="relative hidden md:block w-48 lg:w-56">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </span>
+                    <input type="text" id="globalSearch" placeholder="Cari hardware..." oninput="handleSearch(this.value)" class="w-full pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-lg text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleDarkMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="Ganti Mode Tampilan">
+                    <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Area -->
+    <main id="app" class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Rendered via JS Router -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800/80 mt-16 py-8 text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 PC-Pedia Ensiklopedia Hardware Komputer. Dirancang untuk Edukasi & Enthusiast.</p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="#" onclick="router.navigate('home')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Beranda</a>
+                <a href="#" onclick="router.navigate('packages')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Rekomendasi Rakit</a>
+                <a href="#" onclick="router.navigate('builder')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Simulator</a>
+                <a href="#" onclick="router.navigate('quiz')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Kuis</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-slate-100 dark:bg-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 border border-slate-700 dark:border-slate-200">
+        <div id="toastIcon" class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">✓</div>
+        <div id="toastMessage" class="text-sm font-medium">Pesan sukses!</div>
+    </div>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        // Expanded Database with detailed explanation, history, architecture, and SVG illustrations
+        const componentsData = {
+            cpu: {
+                id: 'cpu',
+                name: 'Prosesor (CPU)',
+                tagline: 'Otak Utama & Pusat Komputasi Sistem',
+                category: 'Processing',
+                desc: 'Central Processing Unit (CPU) atau prosesor adalah sirkuit mikroelektronik utama yang berfungsi sebagai otak dari seluruh sistem komputer. CPU bertanggung jawab untuk mengeksekusi instruksi program komputer, mulai dari kalkulasi aritmatika dasar, operasi logika, pengambilan keputusan, hingga manajemen aliran data antar perangkat keras.',
+                architecture: 'CPU modern dirancang dengan arsitektur multi-core (inti ganda hingga puluhan core) di atas silikon wafer mikroskopis menggunakan teknologi litografi nanometer canggih (seperti 3nm - 5nm). Di dalamnya terdapat Arithmetic Logic Unit (ALU) untuk perhitungan matematika, Control Unit (CU) pengatur alur kerja, serta memori cache berkecepatan tinggi (L1, L2, L3) untuk mempercepat akses data yang sering digunakan.',
+                functions: [
+                    'Mengeksekusi instruksi dari sistem operasi dan aplikasi secara real-time.',
+                    'Melakukan pemrosesan data paralel melalui teknologi multi-thread.',
+                    'Mengatur sinkronisasi waktu dan komunikasi data ke RAM dan GPU.'
+                ],
+                specs: [
+                    { label: 'Fungsi Utama', val: 'Menjalankan instruksi software & kalkulasi logika' },
+                    { label: 'Metrik Penting', val: 'Core & Thread Count, Clock Speed (GHz), IPC, Cache Size' },
+                    { label: 'Brand Utama', val: 'Intel (Core i3/i5/i7/i9), AMD (Ryzen 3/5/7/9)' },
+                    { label: 'Konsumsi Daya (TDP)', val: '65W hingga 253W+' }
+                ],
+                tips: 'Saat memilih CPU, sesuaikan dengan kebutuhan utama Anda: Core i5 / Ryzen 5 sangat ideal untuk gaming mid-range, sedangkan Core i7/i9 atau Ryzen 7/9 sangat direkomendasikan untuk 3D rendering, video editing 4K, dan machine learning.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="40" y="40" width="120" height="120" rx="12" fill="#1e293b" stroke="#6366f1" stroke-width="4"/>
+                        <rect x="55" y="55" width="90" height="90" rx="6" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+                        <rect x="75" y="75" width="50" height="50" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="2"/>
+                        <circle cx="100" cy="100" r="14" fill="#6366f1"/>
+                        <path d="M40 70H25M40 100H25M40 130H25M160 70h15M160 100h15M160 130h15M70 40V25M100 40V25M130 40V25M70 160v15M100 160v15M130 160v15" stroke="#818cf8" stroke-width="3" stroke-linecap="round"/>
+                        <text x="100" y="104" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">CPU</text>
+                    </svg>
+                `
+            },
+            gpu: {
+                id: 'gpu',
+                name: 'Kartu Grafis (GPU / VGA)',
+                tagline: 'Visual Powerhouse & Paralel Komputasi',
+                category: 'Processing',
+                desc: 'Graphic Processing Unit (GPU) adalah prosesor khusus yang dirancang khusus untuk mempercepat render gambar, video, animasi 2D/3D, dan manipulasi piksel. Dalam era modern, GPU juga menjadi tulang punggung utama dalam pelatihan kecerdasan buatan (AI/Deep Learning) dan simulasi fisika kompleks.',
+                architecture: 'Berbeda dengan CPU yang memiliki sedikit core berkecepatan tinggi untuk tugas sekuensial, GPU dirancang dengan ribuan core kecil yang bekerja secara paralel massal (Massively Parallel Processing). Struktur ini memungkinkan GPU memproses jutaan poligon gambar dan piksel secara bersamaan dalam satu siklus clock.',
+                functions: [
+                    'Merender grafis game 3D berkualitas tinggi dengan teknologi Ray Tracing.',
+                    'Mempercepat ekspor video 4K/8K pada software editor profesional (Premiere, DaVinci).',
+                    'Menjalankan komputasi paralel untuk Deep Learning, AI, dan Mining kripto.'
+                ],
+                specs: [
+                    { label: 'Fungsi Utama', val: 'Render grafis 3D, game, & akselerasi AI' },
+                    { label: 'Metrik Penting', val: 'VRAM (GB GDDR6X), CUDA Cores, Memory Bus Width' },
+                    { label: 'Brand Utama', val: 'NVIDIA (GeForce RTX), AMD (Radeon RX), Intel (Arc)' },
+                    { label: 'Konsumsi Daya', val: '150W hingga 450W+' }
+                ],
+                tips: 'Perhatikan ketersediaan daya PSU dan dimensi fisik casing PC Anda. GPU kelas atas seperti seri RTX 4070 ke atas membutuhkan ruang yang luas dan aliran udara yang sangat optimal agar tidak mengalami thermal throttling.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="20" y="60" width="160" height="80" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="4"/>
+                        <circle cx="70" cy="100" r="28" fill="#0f172a" stroke="#4f46e5" stroke-width="3"/>
+                        <circle cx="70" cy="100" r="10" fill="#312e81"/>
+                        <circle cx="140" cy="100" r="28" fill="#0f172a" stroke="#4f46e5" stroke-width="3"/>
+                        <circle cx="140" cy="100" r="10" fill="#312e81"/>
+                        <rect x="35" y="45" width="25" height="15" rx="3" fill="#475569"/>
+                        <rect x="175" y="80" width="10" height="40" rx="2" fill="#94a3b8"/>
+                    </svg>
+                `
+            },
+            motherboard: {
+                id: 'motherboard',
+                name: 'Motherboard (Papan Utama)',
+                tagline: 'Pusat Syaraf & Jaringan Komunikasi Hardware',
+                category: 'Foundation',
+                desc: 'Motherboard adalah papan sirkuit cetak (PCB) utama yang bertindak sebagai tulang punggung sistem komputer. Komponen ini menghubungkan secara fisik dan elektrik seluruh perangkat keras mulai dari CPU, RAM, kartu grafis, media penyimpanan, hingga port USB eksternal.',
+                architecture: 'Dilapisi jalur tembaga mikroskopis (traces) yang menghantarkan sinyal data dan daya listrik. Motherboard dilengkapi chipset pengontrol (seperti Intel Z790 atau AMD X670), soket prosesor, slot ekspansi PCIe, slot memori DIMM, serta chip BIOS/UEFI untuk inisialisasi awal hardware saat komputer dinyalakan.',
+                functions: [
+                    'Menghubungkan komunikasi data berkecepatan tinggi antar CPU, RAM, dan GPU.',
+                    'Menyalurkan dan meregulasi distribusi tegangan listrik dari PSU ke komponen.',
+                    'Menyediakan antarmuka konektivitas lengkap (Wi-Fi, Bluetooth, Audio, USB Type-C).'
+                ],
+                specs: [
+                    { label: 'Fungsi Utama', val: 'Pusat integrasi & komunikasi seluruh hardware PC' },
+                    { label: 'Faktor Bentuk', val: 'ATX, Micro-ATX, Mini-ITX, E-ATX' },
+                    { label: 'Chipset Populer', val: 'Intel Z790/B760, AMD X670/B650' },
+                    { label: 'Fitur Utama', val: 'PCIe 5.0 Slots, M.2 NVMe Heatsink, VRM Phases' }
+                ],
+                tips: 'Pastikan ukuran motherboard sesuai dengan casing PC Anda (misal: Casing Mid-Tower mendukung ATX dan Micro-ATX). Perhatikan juga kualitas VRM (Voltage Regulator Module) jika Anda berencana melakukan overclocking.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="25" width="150" height="150" rx="10" fill="#0f172a" stroke="#4f46e5" stroke-width="3"/>
+                        <rect x="75" y="75" width="50" height="50" rx="4" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+                        <rect x="40" y="40" width="25" height="25" rx="3" fill="#312e81"/>
+                        <rect x="135" y="40" width="25" height="70" rx="3" fill="#312e81"/>
+                        <rect x="40" y="140" width="120" height="20" rx="3" fill="#334155"/>
+                        <line x1="40" y1="80" x2="65" y2="80" stroke="#818cf8" stroke-width="3"/>
+                        <line x1="40" y1="90" x2="65" y2="90" stroke="#818cf8" stroke-width="3"/>
+                    </svg>
+                `
+            },
+            ram: {
+                id: 'ram',
+                name: 'RAM (Memory)',
+                tagline: 'Penyimpanan Data Kilat Sementara (Volatile)',
+                category: 'Memory',
+                desc: 'Random Access Memory (RAM) adalah jenis memori komputer yang berfungsi menyimpan data aplikasi, game, dan sistem operasi yang sedang aktif berjalan secara real-time. Berbeda dengan SSD yang menyimpan data secara permanen, RAM bersifat volatile, artinya seluruh data di dalamnya akan terhapus secara otomatis saat komputer dimatikan.',
+                architecture: 'Terdiri dari chip kapasitor dan transistor mini yang disusun dalam modul kepingan memori (DIMM). RAM berkomunikasi langsung dengan CPU melalui jalur bus memori berkecepatan tinggi dengan latensi nanodetik.',
+                functions: [
+                    'Menyediakan ruang kerja instan bagi CPU untuk memproses aplikasi aktif.',
+                    'Memungkinkan multitasking mulus tanpa jeda saat membuka banyak tab atau program.',
+                    'Mendukung performa gaming dan rendering dengan bandwidth transfer data tinggi.'
+                ],
+                specs: [
+                    { label: 'Fungsi Utama', val: 'Menyimpan data aplikasi aktif secara instan & kilat' },
+                    { label: 'Generasi', val: 'DDR4 & DDR5 (Kecepatan hingga 8000+ MT/s)' },
+                    { label: 'Kapasitas Ideal', val: '16GB (Gaming), 32GB+ (Content Creation & Video Editing)' },
+                    { label: 'Konfigurasi', val: 'Dual-Channel (2 keping identik) sangat dianjurkan' }
+                ],
+                tips: 'Selalu gunakan konfigurasi Dual-Channel (misal 2x8GB atau 2x16GB) alih-alih 1 keping tunggal. Konfigurasi ini menggandakan jalur bandwidth data dan mendongkrak performa sistem hingga 20-30%.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="40" y="70" width="120" height="60" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="50" y="85" width="100" height="30" rx="4" fill="#312e81"/>
+                        <path d="M40 130H160" stroke="#818cf8" stroke-width="4"/>
+                        <rect x="45" y="130" width="6" height="10" fill="#fbbf24"/>
+                        <rect x="65" y="130" width="6" height="10" fill="#fbbf24"/>
+                        <rect x="85" y="130" width="6" height="10" fill="#fbbf24"/>
+                        <rect x="105" y="130" width="6" height="10" fill="#fbbf24"/>
+                        <rect x="125" y="130" width="6" height="10" fill="#fbbf24"/>
+                        <rect x="145" y="130" width="6" height="10" fill="#fbbf24"/>
+                    </svg>
+                `
+            },
+            storage: {
+                id: 'storage',
+                name: 'Media Penyimpanan (SSD / HDD)',
+                tagline: 'Gudang Data Permanen & Sistem Operasi',
+                category: 'Storage',
+                desc: 'Media penyimpanan adalah komponen hardware yang menyimpan seluruh file digital Anda secara permanen, mulai dari file Sistem Operasi (Windows/Linux), software, game berukuran besar, hingga koleksi foto dan video pribadi.',
+                architecture: 'Terbagi menjadi dua jenis utama: SSD (Solid State Drive) berbasis chip memori flash NAND tanpa komponen bergerak yang menawarkan kecepatan baca/tulis kilat, serta HDD (Hard Disk Drive) tradisional yang menggunakan piringan magnetik berputar mekanis.',
+                functions: [
+                    'Menyimpan sistem operasi agar komputer dapat melakukan booting dalam hitungan detik.',
+                    'Menyimpan file game berat, video 4K, dan dokumen kerja dengan aman.',
+                    'Menyediakan ruang virtual memory (pagefile) pendukung RAM.'
+                ],
+                specs: [
+                    { label: 'Jenis Utama', val: 'SSD NVMe M.2 (Super Cepat), SATA SSD, HDD (Kapasitas Besar)' },
+                    { label: 'Kecepatan Baca', val: 'NVMe Gen 4 mencapai 7,000 MB/s, HDD ~150 MB/s' },
+                    { label: 'Kapasitas Standar', val: '512GB, 1TB, 2TB hingga 4TB+' }
+                ],
+                tips: 'Sangat disarankan menggunakan SSD NVMe M.2 minimal berkapasitas 1TB untuk instalasi sistem operasi dan game utama Anda, demi performa loading yang instan.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="65" width="100" height="70" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="22" fill="#0f172a" stroke="#818cf8" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="8" fill="#4f46e5"/>
+                        <path d="M50 100H70M130 100h20" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="65" y="118" width="15" height="10" fill="#fbbf24"/>
+                    </svg>
+                `
+            },
+            psu: {
+                id: 'psu',
+                name: 'Power Supply Unit (PSU)',
+                tagline: 'Pencatu Daya & Pengaman Kelistrikan Sistem',
+                category: 'Power',
+                desc: 'Power Supply Unit (PSU) adalah jantung kelistrikan komputer yang bertugas mengubah arus listrik AC (Alternating Current) dari stopkontak rumah menjadi arus DC (Direct Current) bertegangan rendah yang stabil untuk dialirkan ke CPU, GPU, motherboard, dan seluruh komponen lainnya.',
+                architecture: 'Dilengkapi rangkaian trafo, kapasitor filter, dan sirkuit proteksi kelistrikan canggih (OVP, SCP, OPP). PSU berkualitas dilengkapi sertifikasi efisiensi 80 PLUS (Bronze, Gold, Platinum) yang menjamin sedikitnya energi yang terbuang sebagai panas.',
+                functions: [
+                    'Menyalurkan daya listrik stabil dengan berbagai jalur tegangan (+12V, +5V, +3.3V).',
+                    'Melindungi komponen mahal dari bahaya korsleting, lonjakan tegangan, dan petir.',
+                    'Mengatur kestabilan daya saat sistem berada di bawah beban berat (full load).'
+                ],
+                specs: [
+                    { label: 'Fungsi Utama', val: 'Konversi & distribusi arus listrik aman ke seluruh PC' },
+                    { label: 'Sertifikasi', val: '80 Plus Bronze, Gold, Platinum (Tingkat Efisiensi)' },
+                    { label: 'Kabel', val: 'Non-Modular, Semi-Modular, Fully Modular' },
+                    { label: 'Kapasitas Aman', val: '550W hingga 1000W+ sesuai spesifikasi sistem' }
+                ],
+                tips: 'Jangan pernah berkompromi dengan kualitas PSU abal-abal! PSU berkualitas rendah yang rusak dapat membakar seluruh komponen hardware mahal Anda.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="40" y="55" width="120" height="90" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="30" fill="#0f172a" stroke="#818cf8" stroke-width="3"/>
+                        <path d="M85 85l30 30m0-30l-30 30" stroke="#4f46e5" stroke-width="4" stroke-linecap="round"/>
+                        <rect x="55" y="70" width="12" height="6" rx="2" fill="#334155"/>
+                    </svg>
+                `
+            },
+            casing: {
+                id: 'casing',
+                name: 'Casing PC (Enclosure)',
+                tagline: 'Rumah Pelindung, Estetika, & Sirkulasi Udara',
+                category: 'Enclosure',
+                desc: 'Casing komputer adalah kerangka fisik luar yang menampung dan melindungi seluruh komponen internal PC dari debu, benturan fisik, dan cairan. Selain aspek estetika visual, casing memegang peran kunci dalam mengatur aliran udara (airflow) agar suhu komponen tetap dingin.',
+                architecture: 'Terbuat dari rangka baja/aluminium kokoh dengan panel samping berbahan tempered glass transparan atau jaring mesh baja. Dilengkapi slot ekspansi PCIe, ruang manajemen kabel di bagian belakang, serta braket pemasangan kipas pendingin.',
+                functions: [
+                    'Melindungi sirkuit sensitif komponen dari debu, kotoran, dan kerusakan mekanis.',
+                    'Mengatur jalur sirkulasi udara masuk dan keluar untuk mencegah overheating.',
+                    'Menyediakan panel I/O depan (Port USB, Audio Jack, Tombol Power).'
+                ],
+                specs: [
+                    { label: 'Faktor Bentuk', val: 'Full Tower, Mid Tower, Mini-ITX' },
+                    { label: 'Fitur Utama', val: 'Tempered Glass Side Panel, Mesh Front, ARGB Lighting' },
+                    { label: 'Dukungan Pendingin', val: 'Slot Fan 120mm/140mm & Radiator AIO Water Cooling' }
+                ],
+                tips: 'Pilihlah casing dengan panel depan berpori (mesh front panel) agar udara segar dapat masuk secara maksimal ke dalam sistem.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="55" y="30" width="90" height="140" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="70" y="45" width="60" height="70" rx="4" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+                        <circle cx="100" cy="145" r="10" fill="#312e81" stroke="#818cf8" stroke-width="2"/>
+                        <line x1="75" y1="60" x2="125" y2="60" stroke="#4f46e5" stroke-width="3"/>
+                    </svg>
+                `
+            },
+            cooler: {
+                id: 'cooler',
+                name: 'Pendingin CPU (CPU Cooler)',
+                tagline: 'Peredam Panas & Penjaga Stabilitas Suhu',
+                category: 'Cooling',
+                desc: 'CPU Cooler adalah perangkat pendingin yang dipasang di atas prosesor untuk menyerap dan membuang kalor (panas) yang dihasilkan selama proses komputasi berlangsung, agar CPU tidak mengalami overheat yang berujung pada penurunan performa atau kerusakan.',
+                architecture: 'Terdiri dari dua jenis utama: Air Cooler (menggunakan balok heatsink aluminium/tembaga, pipa heatpipe, dan kipas angin) serta Liquid Cooler / AIO (menggunakan cairan pendingin khusus yang dipompa melalui blok tembaga menuju radiator eksternal dengan kipas).',
+                functions: [
+                    'Menyerap panas dari permukaan IHS (Integrated Heat Spreader) prosesor.',
+                    'Membuang kalor ke udara bebas secara efisien melalui sirip-sirip radiator.',
+                    'Menjaga suhu CPU tetap stabil pada batas aman saat beban kerja 100%.'
+                ],
+                specs: [
+                    { label: 'Jenis Utama', val: 'Air Cooler (Tower Fan) & Liquid Cooler (AIO Water Cooling 240mm/360mm)' },
+                    { label: 'Kinerja', val: 'Diukur berdasarkan kemampuan disipasi TDP (Thermal Design Power)' }
+                ],
+                tips: 'Pastikan tinggi clearance air cooler muat di dalam casing Anda, atau pastikan ukuran radiator AIO water cooling kompatibel dengan bagian atas/depan casing.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="45" fill="#1e293b" stroke="#6366f1" stroke-width="4"/>
+                        <circle cx="100" cy="100" r="18" fill="#4f46e5"/>
+                        <path d="M100 55v20m0 50v20M55 100h20m50 0h20" stroke="#818cf8" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                `
+            },
+            monitor: {
+                id: 'monitor',
+                name: 'Monitor Display',
+                tagline: 'Jendela Visual Utama Interaksi Digital',
+                category: 'Peripherals',
+                desc: 'Monitor komputer adalah perangkat output visual yang menampilkan antarmuka sistem operasi, teks, gambar, video, dan game secara real-time. Kualitas monitor sangat menentukan kenyamanan mata dan ketajaman detail warna yang Anda lihat.',
+                architecture: 'Menggunakan berbagai teknologi panel layar seperti IPS (Color Accuracy & Viewing Angles luas), VA (High Contrast Ratio), dan OLED (Deep Blacks & Response Time kilat), dipadu dengan refresh rate tinggi (144Hz - 360Hz) untuk kelancaran pergerakan gambar.',
+                functions: [
+                    'Menampilkan output grafis dari kartu grafis (GPU) dalam bentuk visual nyata.',
+                    'Menunjang produktivitas kerja profesional dengan resolusi tajam (FHD, QHD, 4K).'
+                ],
+                specs: [
+                    { label: 'Jenis Panel', val: 'IPS, VA, OLED dengan Resolusi FHD hingga 4K UHD' },
+                    { label: 'Refresh Rate', val: '60Hz, 144Hz, 240Hz, hingga 360Hz' }
+                ],
+                tips: 'Untuk kebutuhan gaming kompetitif, pilih monitor IPS dengan refresh rate minimal 144Hz dan response time 1ms.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="30" y="45" width="140" height="90" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="40" y="55" width="120" height="70" rx="3" fill="#0f172a"/>
+                        <path d="M90 135h20v15H90zM75 150h50v5H75z" fill="#475569"/>
+                    </svg>
+                `
+            },
+            peripherals: {
+                id: 'peripherals',
+                name: 'Keyboard & Mouse',
+                tagline: 'Perangkat Input Utama Pengendali Sistem',
+                category: 'Peripherals',
+                desc: 'Keyboard dan mouse adalah perangkat input esensial yang menjembatani interaksi fisik pengguna dengan sistem komputer. Keyboard mekanikal dengan switch presisi dan mouse gaming beresolusi tinggi memberikan kenyamanan dan kecepatan eksekusi perintah.',
+                architecture: 'Keyboard mekanikal menggunakan saklar mekanik independen (Mechanical Switches) untuk setiap tombolnya, sementara mouse modern menggunakan sensor optik/laser presisi tinggi dengan tingkat DPI yang dapat disesuaikan.',
+                functions: [
+                    'Memasukkan perintah teks, shortcut, dan kontrol navigasi dalam game maupun aplikasi.',
+                    'Memberikan umpan balik taktil (tactile feedback) yang ergonomis dan nyaman.'
+                ],
+                specs: [
+                    { label: 'Jenis Keyboard', val: 'Mechanical Switch (Red, Blue, Brown) dengan RGB' },
+                    { label: 'Sensor Mouse', val: 'Optical Sensor High-DPI dengan polling rate 1000Hz' }
+                ],
+                tips: 'Pilih keyboard mekanikal sesuai preferensi suara dan ketukan (tactile atau linear) serta mouse yang ergonomis sesuai ukuran telapak tangan.',
+                svgIllustration: `
+                    <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="30" y="70" width="140" height="60" rx="6" fill="#1e293b" stroke="#6366f1" stroke-width="3"/>
+                        <rect x="42" y="82" width="12" height="10" rx="2" fill="#4f46e5"/>
+                        <rect x="60" y="82" width="12" height="10" rx="2" fill="#4f46e5"/>
+                        <rect x="78" y="82" width="12" height="10" rx="2" fill="#4f46e5"/>
+                        <rect x="96" y="82" width="12" height="10" rx="2" fill="#4f46e5"/>
+                        <rect x="114" y="82" width="12" height="10" rx="2" fill="#4f46e5"/>
+                        <rect x="132" y="82" width="26" height="10" rx="2" fill="#312e81"/>
+                        <rect x="42" y="98" width="80" height="10" rx="2" fill="#334155"/>
+                    </svg>
+                `
+            }
+        };
+
+        // Pre-built PC Packages Data (Low, Mid, High)
+        const packagesData = [
+            {
+                tier: 'low',
+                title: 'Spek Rendah (Office & Casual)',
+                badge: 'Budget Friendly',
+                price: 'Rp 4.5jt - 6.5jt',
+                desc: 'Paket PC optimal untuk kebutuhan kerja kantoran, administrasi, sekolah online, browsing multi-tab, dan game ringan.',
+                parts: [
+                    { name: 'Prosesor: Intel Core i3-12100F / AMD Ryzen 3 4100', role: 'CPU' },
+                    { name: 'Motherboard: H610M / A520M Motherboard', role: 'Mainboard' },
+                    { name: 'RAM: 16GB (2x8GB) DDR4 3200MHz', role: 'Memory' },
+                    { name: 'Storage: SSD 512GB NVMe M.2', role: 'Storage' },
+                    { name: 'GPU: NVIDIA GTX 1650 atau AMD Radeon RX 6400', role: 'Graphics' },
+                    { name: 'PSU: 500W 80+ Standard', role: 'Power Supply' },
+                    { name: 'Casing: Standard Office Case + Fan', role: 'Enclosure' }
+                ]
+            },
+            {
+                tier: 'mid',
+                title: 'Spek Sedang (Gaming & Editing Mid-Range)',
+                badge: 'Most Popular',
+                price: 'Rp 10jt - 14jt',
+                desc: 'Paket PC paling seimbang untuk melibas game AAA modern resolusi 1080p rata kanan serta video editing 1080p/4K ringan.',
+                parts: [
+                    { name: 'Prosesor: Intel Core i5-13400F / AMD Ryzen 5 5600X', role: 'CPU' },
+                    { name: 'Motherboard: B760M / B550M Chipset', role: 'Mainboard' },
+                    { name: 'RAM: 32GB (2x16GB) DDR4/DDR5 3600MHz', role: 'Memory' },
+                    { name: 'Storage: SSD 1TB NVMe Gen4 High-Speed', role: 'Storage' },
+                    { name: 'GPU: NVIDIA GeForce RTX 4060 8GB / RX 7600', role: 'Graphics' },
+                    { name: 'PSU: 650W 80+ Bronze Certified', role: 'Power Supply' },
+                    { name: 'Casing: Mid-Tower Mesh with ARGB Fans', role: 'Enclosure' }
+                ]
+            },
+            {
+                tier: 'high',
+                title: 'Spek Tinggi (High-End Gaming & 4K Render)',
+                badge: 'Enthusiast Beast',
+                price: 'Rp 22jt - 35jt+',
+                desc: 'Komputer sultan tanpa kompromi! Mampu menjalankan game 4K Ray Tracing maksimal dan rendering 3D / AI machine learning tingkat lanjut.',
+                parts: [
+                    { name: 'Prosesor: Intel Core i7-14700K / AMD Ryzen 7 7800X3D', role: 'CPU' },
+                    { name: 'Motherboard: Z790 / X670 Gaming Motherboard', role: 'Mainboard' },
+                    { name: 'RAM: 32GB / 64GB DDR5 6000MHz Dual Channel', role: 'Memory' },
+                    { name: 'Storage: 2TB NVMe Gen4 SSD (Read 7000 MB/s)', role: 'Storage' },
+                    { name: 'GPU: NVIDIA GeForce RTX 4070 Ti Super / RTX 4080', role: 'Graphics' },
+                    { name: 'Cooling: AIO Liquid Cooler 240mm / 360mm', role: 'Cooler' },
+                    { name: 'PSU: 850W 80+ Gold Fully Modular', role: 'Power Supply' },
+                    { name: 'Casing: Premium Panoramic Tempered Glass Case', role: 'Enclosure' }
+                ]
+            }
+        ];
+
+        // 10 Quiz Questions Database
+        const quizData = [
+            {
+                q: "Komponen manakah yang sering dijuluki sebagai 'otak' utama komputer untuk mengeksekusi perhitungan logika?",
+                options: ["RAM", "Prosesor (CPU)", "Power Supply", "Hard Disk"],
+                answer: 1
+            },
+            {
+                q: "Apa fungsi utama dari RAM dalam sebuah sistem komputer yang sedang berjalan?",
+                options: ["Menyimpan file foto dan video selamanya", "Menyimpan data aplikasi yang sedang aktif secara instan", "Menyuplai tegangan listrik dari stopkontak", "Mendinginkan suhu chip prosesor"],
+                answer: 1
+            },
+            {
+                q: "Sertifikasi apakah yang menunjukkan tingkat efisiensi kelistrikan pada sebuah Power Supply Unit (PSU)?",
+                options: ["80 Plus Bronze/Gold/Platinum", "DDR4 / DDR5 Speed Rating", "NVMe PCIe Gen 4 Bandwidth", "ATX / Micro-ATX Form Factor"],
+                answer: 0
+            },
+            {
+                q: "Media penyimpanan manakah yang menawarkan kecepatan baca/tulis paling kilat berbasis chip flash memory?",
+                options: ["Hard Disk Drive (HDD)", "Floppy Disk", "SSD NVMe M.2", "CD-ROM Discs"],
+                answer: 2
+            },
+            {
+                q: "Mengapa konfigurasi RAM Dual-Channel (menggunakan 2 keping identik) sangat dianjurkan?",
+                options: ["Agar konsumsi daya listrik lebih hemat", "Menggandalkan jalur bandwidth data sehingga performa naik", "Agar kapasitas memori otomatis menjadi 128GB", "Agar suhu komputer menjadi sangat dingin"],
+                answer: 1
+            },
+            {
+                q: "Komponen apakah yang bertanggung jawab penuh merender grafis 3D game dan akselerasi AI?",
+                options: ["Sound Card", "GPU (Graphics Processing Unit)", "LAN Card", "CMOS Battery"],
+                answer: 1
+            },
+            {
+                q: "Papan sirkuit pusat yang menghubungkan seluruh komponen hardware PC agar saling berkomunikasi disebut...",
+                options: ["Motherboard", "Heatsink", "Chassis", "Monitor Display"],
+                answer: 0
+            },
+            {
+                q: "Apa nama alat pendingin yang menggunakan cairan khusus yang dipompa untuk mendinginkan prosesor?",
+                options: ["Air Cooler (Tower Fan)", "AIO Liquid Water Cooling", "Exhaust Fan biasa", "Thermal Paste"],
+                answer: 1
+            },
+            {
+                q: "Panel samping casing PC modern yang transparan dan elegan umumnya terbuat dari bahan...",
+                options: ["Kayu jati", "Kaca Tempered Glass", "Plastik akrilik buram", "Besi cor tebal"],
+                answer: 1
+            },
+            {
+                q: "Fitur teknologi pada GPU modern yang memantulkan cahaya secara fotorealistik dalam game disebut...",
+                options: ["Ray Tracing", "Overclocking", "Dual-Channel", "Hyper-Threading"],
+                answer: 0
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+
+        // Dark Mode State & Initialization
+        function initTheme() {
+            const savedTheme = localStorage.getItem('pc_pedia_theme');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+            } else {
+                document.documentElement.classList.add('dark');
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('pc_pedia_theme', 'light');
+                showToast("Mode Terang diaktifkan");
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('pc_pedia_theme', 'dark');
+                showToast("Mode Gelap diaktifkan");
+            }
+        }
+
+        // Router & View Management
+        const router = {
+            navigate: function(viewId, param = null) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const app = document.getElementById('app');
+                
+                if (viewId === 'home') {
+                    app.innerHTML = renderHome();
+                } else if (viewId === 'detail') {
+                    app.innerHTML = renderDetail(param);
+                } else if (viewId === 'packages') {
+                    app.innerHTML = renderPackages();
+                } else if (viewId === 'builder') {
+                    app.innerHTML = renderBuilder();
+                } else if (viewId === 'quiz') {
+                    app.innerHTML = renderQuiz();
+                }
+            }
+        };
+
+        // Render Home View
+        function renderHome() {
+            return `
+                <div class="space-y-12">
+                    <!-- Hero Section -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/30 via-slate-100 to-violet-900/20 dark:from-indigo-950/50 dark:via-slate-900 dark:to-violet-950/40 border border-indigo-500/20 p-8 sm:p-12 shadow-2xl transition-colors duration-300">
+                        <div class="absolute -right-20 -top-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="relative z-10 max-w-2xl space-y-4">
+                            <span class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-300 text-xs font-semibold">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                                <span>Ensiklopedia Hardware Komputer Terlengkap</span>
+                            </span>
+                            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                                Kenali Setiap Bagian <span class="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">Komputer Anda</span>
+                            </h1>
+                            <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+                                Panduan mendalam mengenai fungsi, arsitektur internal, spesifikasi teknis, dan tips memilih hardware PC dengan ilustrasi vektor kustom yang elegan.
+                            </p>
+                            <div class="pt-2 flex flex-wrap gap-4">
+                                <button onclick="router.navigate('packages')" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition transform hover:-translate-y-0.5">
+                                    Rekomendasi Rakit PC
+                                </button>
+                                <button onclick="router.navigate('quiz')" class="px-6 py-3 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold rounded-xl border border-slate-200 dark:border-slate-700 transition">
+                                    Mulai Kuis 10 Soal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Components Grid -->
+                    <div class="space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Daftar Komponen Utama PC</h2>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Klik pada komponen untuk melihat penjelasan mendetail dan spesifikasi lengkap.</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button onclick="filterComponents('all')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white filter-btn" data-filter="all">Semua</button>
+                                <button onclick="filterComponents('Processing')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 filter-btn" data-filter="Processing">Prosesor & GPU</button>
+                                <button onclick="filterComponents('Hardware')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 filter-btn" data-filter="Hardware">Lainnya</button>
+                            </div>
+                        </div>
+
+                        <div id="componentsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            ${Object.values(componentsData).map(comp => `
+                                <div onclick="router.navigate('detail', '${comp.id}')" class="group bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 rounded-2xl p-6 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex flex-col justify-between">
+                                    <div>
+                                        <div class="w-full h-36 bg-slate-100 dark:bg-slate-950/50 rounded-xl mb-4 p-4 flex items-center justify-center border border-slate-200 dark:border-slate-800/50 group-hover:border-indigo-500/30 transition">
+                                            <div class="w-24 h-24 transform group-hover:scale-105 transition duration-300">
+                                                ${comp.svgIllustration}
+                                            </div>
+                                        </div>
+                                        <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">${comp.category}</span>
+                                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition">${comp.name}</h3>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${comp.tagline}</p>
+                                    </div>
+                                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                                        <span>Baca Penjelasan Detail</span>
+                                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Detailed Component View
+        function renderDetail(componentId) {
+            const comp = componentsData[componentId] || componentsData['cpu'];
+            return `
+                <div class="space-y-8">
+                    <!-- Breadcrumb Navigation -->
+                    <div class="flex items-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+                        <button onclick="router.navigate('home')" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Beranda</button>
+                        <span>/</span>
+                        <span class="text-indigo-600 dark:text-indigo-400 font-medium">${comp.name}</span>
+                    </div>
+
+                    <!-- Main Detail Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <!-- Left Column: Illustration Only -->
+                        <div class="lg:col-span-5 space-y-6">
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl transition-colors duration-300">
+                                <div class="absolute inset-0 bg-gradient-to-b from-indigo-500/5 to-transparent pointer-events-none"></div>
+                                <div class="w-56 h-56 mb-4">
+                                    ${comp.svgIllustration}
+                                </div>
+                                <span class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-600 dark:text-indigo-300 text-xs font-semibold mt-2 text-center">
+                                    ${comp.tagline}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Extended Description & Specifications -->
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl transition-colors duration-300">
+                                <div>
+                                    <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Kategori: ${comp.category}</span>
+                                    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mt-1">${comp.name}</h1>
+                                </div>
+
+                                <!-- Deep Explanation Paragraphs -->
+                                <div class="space-y-4 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                                    <p>${comp.desc}</p>
+                                    <p>${comp.architecture}</p>
+                                </div>
+
+                                <!-- Core Functions List -->
+                                <div class="space-y-3 pt-2">
+                                    <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Fungsi Utama dalam Sistem:</h3>
+                                    <ul class="space-y-2">
+                                        ${comp.functions.map(fn => `
+                                            <li class="flex items-start space-x-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                                <span class="text-indigo-600 dark:text-indigo-400 font-bold mt-0.5">✔</span>
+                                                <span>${fn}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+
+                                <!-- Specifications Card -->
+                                <div class="border-t border-slate-200 dark:border-slate-800 pt-6 space-y-4">
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Spesifikasi & Karakteristik</h3>
+                                    <div class="grid grid-cols-1 gap-3">
+                                        ${comp.specs.map(spec => `
+                                            <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                                <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-300">${spec.label}</span>
+                                                <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium sm:text-right">${spec.val}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 flex items-center justify-between border-t border-slate-200 dark:border-slate-800">
+                                    <button onclick="router.navigate('home')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl transition shadow-lg shadow-indigo-600/30">
+                                        &larr; Kembali ke Ensiklopedia
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render PC Packages Recommendation View
+        function renderPackages() {
+            return `
+                <div class="space-y-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="text-left space-y-2">
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs font-semibold border border-indigo-500/30">Rekomendasi Ahli</span>
+                            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">Paket Rakitan PC Terbaik</h1>
+                            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400">Pilih tier rakitan PC yang sesuai dengan kebutuhan produktivitas dan anggaran Anda.</p>
+                        </div>
+                        <button onclick="router.navigate('home')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold rounded-xl transition self-start sm:self-auto">
+                            &larr; Kembali ke Beranda
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        ${packagesData.map(pkg => `
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-xl transition-all hover:border-indigo-500/50">
+                                <div class="space-y-6">
+                                    <div class="flex items-center justify-between">
+                                        <span class="px-3 py-1 text-xs font-bold rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">${pkg.badge}</span>
+                                        <span class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">${pkg.price}</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white">${pkg.title}</h3>
+                                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">${pkg.desc}</p>
+                                    </div>
+
+                                    <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                        <h4 class="text-xs font-bold text-slate-900 dark:text-slate-200 uppercase tracking-wider">Komponen Utama:</h4>
+                                        <div class="space-y-2">
+                                            ${pkg.parts.map(p => `
+                                                <div class="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700/40 text-xs flex flex-col">
+                                                    <span class="font-semibold text-indigo-600 dark:text-indigo-300">${p.role}</span>
+                                                    <span class="text-slate-700 dark:text-slate-200">${p.name}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render PC Builder Simulator View
+        function renderBuilder() {
+            return `
+                <div class="space-y-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Simulator Interaktif</span>
+                            <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Simulasi Rakit Komputer</h1>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Pilih komponen impian Anda dan cek estimasi total kebutuhan daya listrik.</p>
+                        </div>
+                        <button onclick="resetBuilder()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl transition">
+                            Reset Rakitan
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <div class="lg:col-span-8 space-y-4" id="builderSlots">
+                            <!-- Injected by JS -->
+                        </div>
+
+                        <div class="lg:col-span-4 space-y-6">
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sticky top-24 space-y-6 shadow-2xl">
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-4">Ringkasan Rakitan</h3>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                                        <span>Total Komponen:</span>
+                                        <span id="summaryCount" class="font-bold text-slate-900 dark:text-white">0 / 5</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                                        <span>Estimasi Daya:</span>
+                                        <span id="summaryPower" class="font-bold text-indigo-600 dark:text-indigo-400">0 Watt</span>
+                                    </div>
+                                    <div class="flex justify-between text-slate-500 dark:text-slate-400">
+                                        <span>Rekomendasi PSU:</span>
+                                        <span id="summaryPsuRec" class="font-bold text-emerald-600 dark:text-emerald-400">Minimal 500W</span>
+                                    </div>
+                                </div>
+                                <button onclick="showToast('Rakitan berhasil disimpan & divalidasi!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition text-sm">
+                                    Simpan & Validasi Rakitan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render 10-Question Interactive Quiz View with Celebration Animation
+        function renderQuiz() {
+            return `
+                <div class="max-w-2xl mx-auto space-y-8 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-1">
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs font-semibold border border-indigo-500/30">Tantangan Pengetahuan Hardware</span>
+                            <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Kuis Komputer 10 Soal</h1>
+                        </div>
+                        <button onclick="router.navigate('home')" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold rounded-xl transition">
+                            &larr; Beranda
+                        </button>
+                    </div>
+
+                    <div id="quizContainer" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden transition-colors duration-300">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadQuizQuestion() {
+            const container = document.getElementById('quizContainer');
+            if (!container) return;
+
+            if (currentQuizIndex >= quizData.length) {
+                const isPerfectScore = (score === quizData.length);
+                container.innerHTML = `
+                    <div class="text-center space-y-6 py-6">
+                        ${isPerfectScore ? `
+                            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-600/10 via-purple-600/10 to-emerald-600/10 pointer-events-none animate-pulse"></div>
+                            <div class="w-20 h-20 bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl font-extrabold shadow-xl">🏆</div>
+                            <div class="space-y-2">
+                                <h2 class="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">JAWABAN KAMU BENAR SEMUA!</h2>
+                                <p class="text-sm text-slate-600 dark:text-slate-300 font-medium">Luar biasa! Anda berhasil menjawab seluruh 10 soal kuis dengan sempurna tanpa satupun kesalahan. Anda adalah seorang PC Enthusiast sejati!</p>
+                            </div>
+                        ` : `
+                            <div class="w-16 h-16 bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">🎉</div>
+                            <div class="space-y-1">
+                                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Kuis Selesai!</h2>
+                                <p class="text-slate-600 dark:text-slate-300 text-sm">Skor Anda: <span class="font-bold text-indigo-600 dark:text-indigo-400">${score}</span> dari ${quizData.length} soal.</p>
+                            </div>
+                        `}
+                        <button onclick="resetQuiz()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition text-sm">Ulangi Kuis</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = quizData[currentQuizIndex];
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        <span>Pertanyaan ${currentQuizIndex + 1} dari ${quizData.length}</span>
+                        <span>Skor Sementara: ${score}</span>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">${q.q}</h3>
+                    <div class="space-y-3 pt-2">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="checkQuizAnswer(${idx}, ${q.answer})" class="w-full text-left px-5 py-3.5 bg-slate-50 dark:bg-slate-800/70 hover:bg-indigo-50 dark:hover:bg-indigo-600/20 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 transition">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkQuizAnswer(selected, correct) {
+            if (selected === correct) {
+                score++;
+                showToast("Jawaban Benar! 🎉");
+            } else {
+                showToast("Jawaban Kurang Tepat.");
+            }
+            currentQuizIndex++;
+            loadQuizQuestion();
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            loadQuizQuestion();
+        }
+
+        // Builder State & Logic
+        const builderSelections = {
+            cpu: null,
+            gpu: null,
+            ram: null,
+            storage: null,
+            psu: null
+        };
+
+        const builderOptions = {
+            cpu: [
+                { name: "Intel Core i5-14400F", power: 65 },
+                { name: "Intel Core i7-14700K", power: 125 },
+                { name: "AMD Ryzen 5 7600X", power: 105 },
+                { name: "AMD Ryzen 7 7800X3D", power: 120 }
+            ],
+            gpu: [
+                { name: "NVIDIA GeForce RTX 4060", power: 115 },
+                { name: "NVIDIA GeForce RTX 4070 Super", power: 220 },
+                { name: "AMD Radeon RX 7800 XT", power: 263 }
+            ],
+            ram: [
+                { name: "16GB (2x8GB) DDR5 5600MHz", power: 10 },
+                { name: "32GB (2x16GB) DDR5 6000MHz", power: 15 }
+            ],
+            storage: [
+                { name: "SSD 1TB NVMe Gen4", power: 5 },
+                { name: "SSD 2TB NVMe Gen4", power: 8 }
+            ],
+            psu: [
+                { name: "650W 80+ Bronze", power: 0 },
+                { name: "750W 80+ Gold Modular", power: 0 },
+                { name: "850W 80+ Gold Fully Modular", power: 0 }
+            ]
+        };
+
+        function renderBuilderSlots() {
+            const container = document.getElementById('builderSlots');
+            if (!container) return;
+
+            const slotLabels = {
+                cpu: 'Prosesor (CPU)',
+                gpu: 'Kartu Grafis (GPU)',
+                ram: 'Memori (RAM)',
+                storage: 'Penyimpanan (SSD)',
+                psu: 'Power Supply (PSU)'
+            };
+
+            container.innerHTML = Object.keys(builderSelections).map(key => `
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+                    <div>
+                        <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">${slotLabels[key]}</span>
+                        <h4 class="text-base font-bold text-slate-900 dark:text-white mt-0.5">${builderSelections[key] ? builderSelections[key].name : 'Belum dipilih'}</h4>
+                    </div>
+                    <select onchange="updateBuilderSelection('${key}', this.value)" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-sm rounded-xl px-4 py-2 focus:outline-none focus:border-indigo-500">
+                        <option value="">-- Pilih ${slotLabels[key]} --</option>
+                        ${builderOptions[key].map((item, idx) => `
+                            <option value="${idx}" ${builderSelections[key] && builderSelections[key].name === item.name ? 'selected' : ''}>${item.name} (${item.power > 0 ? item.power + 'W' : 'Power'})</option>
+                        `).join('')}
+                    </select>
+                </div>
+            `).join('');
+
+            updateBuilderSummary();
+        }
+
+        function updateBuilderSelection(category, index) {
+            if (index === "") {
+                builderSelections[category] = null;
+            } else {
+                builderSelections[category] = builderOptions[category][index];
+            }
+            renderBuilderSlots();
+        }
+
+        function updateBuilderSummary() {
+            const countEl = document.getElementById('summaryCount');
+            const powerEl = document.getElementById('summaryPower');
+            const psuRecEl = document.getElementById('summaryPsuRec');
+            if (!countEl) return;
+
+            let count = 0;
+            let totalPower = 50;
+            for (let key in builderSelections) {
+                if (builderSelections[key]) {
+                    count++;
+                    totalPower += builderSelections[key].power;
+                }
+            }
+
+            countEl.textContent = `${count} / 5`;
+            powerEl.textContent = `${totalPower} Watt`;
+            psuRecEl.textContent = `Minimal ${Math.ceil(totalPower * 1.3 / 50) * 50}W`;
+        }
+
+        function resetBuilder() {
+            for (let key in builderSelections) {
+                builderSelections[key] = null;
+            }
+            renderBuilderSlots();
+            showToast("Rakitan berhasil direset.");
+        }
+
+        // Global Search Handler
+        function handleSearch(query) {
+            const q = query.toLowerCase().trim();
+            if (!q) return;
+
+            const found = Object.values(componentsData).find(c => c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q));
+            if (found) {
+                router.navigate('detail', found.id);
+            }
+        }
+
+        // Filter Components on Home
+        function filterComponents(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-slate-700');
+            });
+            event.target.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300', 'border', 'border-slate-200', 'dark:border-slate-700');
+            event.target.classList.add('bg-indigo-600', 'text-white');
+
+            const grid = document.getElementById('componentsGrid');
+            if (!grid) return;
+
+            const list = Object.values(componentsData).filter(c => {
+                if (category === 'all') return true;
+                if (category === 'Processing') return c.category === 'Processing';
+                return c.category !== 'Processing';
+            });
+
+            grid.innerHTML = list.map(comp => `
+                <div onclick="router.navigate('detail', '${comp.id}')" class="group bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 rounded-2xl p-6 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-indigo-500/10 flex flex-col justify-between">
+                    <div>
+                        <div class="w-full h-36 bg-slate-100 dark:bg-slate-950/50 rounded-xl mb-4 p-4 flex items-center justify-center border border-slate-200 dark:border-slate-800/50 group-hover:border-indigo-500/30 transition">
+                            <div class="w-24 h-24 transform group-hover:scale-105 transition duration-300">
+                                ${comp.svgIllustration}
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">${comp.category}</span>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition">${comp.name}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${comp.tagline}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        <span>Baca Penjelasan Detail</span>
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toast Notification Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initial Load on Window Load
+        window.onload = function() {
+            initTheme();
+            router.navigate('home');
+            
+            const originalNavigate = router.navigate;
+            router.navigate = function(viewId, param) {
+                originalNavigate(viewId, param);
+                if (viewId === 'builder') {
+                    renderBuilderSlots();
+                } else if (viewId === 'quiz') {
+                    loadQuizQuestion();
+                }
+            };
+        };
+    </script>
+</body>
+</html>
